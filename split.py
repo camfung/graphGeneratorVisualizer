@@ -21,14 +21,15 @@ class Split:
 
     def split(self):
         # selecting rows based on condition
-        rslt_df = self.df[self.df["ClaimAmount"] > 1]
+        rslt_df = self.df[self.df["feature13"] == 5]
+        rslt_df = rslt_df[rslt_df["ClaimAmount"] < 20000]
         return rslt_df
 
 
 def main():
     a = Split("./trainingset.csv")
     splitdf = a.split()
-    splitdf.to_csv("onlynonezerodata.csv")
+    splitdf.to_csv("feature13=5.csv")
 
 
 main()
