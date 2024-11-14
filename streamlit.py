@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import glob
 from enums import Columns, GraphType
 from graphGenerator import GraphGenerator, numbers_to_columns
 
@@ -7,9 +8,13 @@ from graphGenerator import GraphGenerator, numbers_to_columns
 def create_streamlit_app():
     st.title("Data Visualization Tool")
 
+    # Use glob to find all .csv files in the current directory
+    csv_files = glob.glob("*.csv")
+
+    # Display the selectbox with the dynamically fetched .csv files
     uploaded_file = st.selectbox(
-        "select dataset",
-        options=["./onlyzerodata.csv", "./onlynonezerodata.csv", "./trainingset.csv"],
+        "Select dataset",
+        options=csv_files,
     )
 
     # # File uploader
@@ -33,7 +38,7 @@ def create_streamlit_app():
             # Multiple selection for main columns
             main_features = st.multiselect(
                 "Select Main Feature(s)",
-                options=list(range(1, 19)),
+                options=list(range(1, 19)) + ["ClaimAmount"],
                 help="Select one or more features (1-18)",
             )
 
@@ -43,7 +48,7 @@ def create_streamlit_app():
                 # Single or multiple selection for comparison columns
                 compare_feature = st.selectbox(
                     "Select Comparison Feature",
-                    options=[f"feature{i}" for i in range(1, 19)],
+                    options=[f"feature{i}" for i in range(1, 19)] + ["ClaimAmount"],
                     help="Select a feature to compare against",
                 )
 
@@ -51,7 +56,9 @@ def create_streamlit_app():
                 if graph_type == GraphType.SCATTER:
                     color_by = st.selectbox(
                         "Color by Feature",
-                        options=[None] + [f"feature{i}" for i in range(1, 19)],
+                        options=[None]
+                        + [f"feature{i}" for i in range(1, 19)]
+                        + ["ClaimAmount"],
                         help="Select a feature to color the points by",
                     )
                 else:
